@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Amp Settings</title>
+  <meta name="description" content="Amp Settings — painel de configurações e presets para amplificadores" />
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --muted:#9aa4b2;
+      --accent:#7c3aed;
+      --glass: rgba(255,255,255,0.03);
+      --radius:14px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      color-scheme: dark;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#071024);color:#e6eef6}
+    .container{max-width:1100px;margin:32px auto;padding:28px;border-radius:20px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:0 6px 30px rgba(2,6,23,0.6)}
+    header{display:flex;gap:16px;align-items:center;justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#2dd4bf);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px}
+    .title{font-size:20px;font-weight:700}
+    .subtitle{font-size:12px;color:var(--muted)}
+    .search-wrap{display:flex;align-items:center;background:var(--glass);padding:6px;border-radius:999px;gap:8px;border:1px solid rgba(255,255,255,0.03)}
+    .search-wrap input{background:transparent;border:0;outline:0;color:inherit;padding:8px 10px;width:260px;font-size:14px}
+    .search-button{display:inline-flex;align-items:center;justify-content:center;padding:8px;border-radius:999px;cursor:pointer}
+    .search-button svg{width:18px;height:18px;opacity:0.9}
+    .tabs{display:flex;gap:8px;margin-top:22px}
+    .tab{padding:10px 14px;border-radius:12px;background:transparent;border:1px solid transparent;cursor:pointer;font-weight:600}
+    .tab[aria-selected="true"]{background:linear-gradient(90deg, rgba(124,58,237,0.14), rgba(45,212,191,0.06));border-color:rgba(124,58,237,0.16)}
+    main{display:grid;grid-template-columns:320px 1fr;gap:18px;margin-top:18px}
+    .sidebar{background:var(--card);padding:18px;border-radius:14px}
+    .preset{padding:10px;border-radius:10px;margin-bottom:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.02)}
+    .preset small{display:block;color:var(--muted);font-size:12px}
+    .content{background:var(--card);padding:20px;border-radius:14px;min-height:320px}
+    .controls{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px 12px;border-radius:10px;cursor:pointer}
+    footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
+    @media (max-width:900px){main{grid-template-columns:1fr;} .search-wrap input{width:140px}}
+  </style>
+</head>
+<body>
+  <div class="container" role="application" aria-label="Amp Settings app">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true">AS</div>
+        <div>
+          <div class="title">Amp Settings</div>
+          <div class="subtitle">Painel profissional de presets e configurações</div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="search-wrap" role="search" aria-label="Pesquisar no site">
+          <button class="search-button" id="searchToggle" aria-label="Abrir busca" title="Buscar">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="11" cy="11" r="6.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <input id="searchInput" placeholder="Pesquisar presets, abas, comandos..." aria-label="Campo de pesquisa" />
+          <button class="btn" id="clearSearch" title="Limpar" aria-label="Limpar pesquisa" style="display:none">Limpar</button>
+        </div>
+
+        <nav aria-label="Controles de conta">
+          <button class="btn" id="headerSave" title="Salvar">Salvar</button>
+        </nav>
+      </div>
+    </header>
+
+    <div class="tabs" role="tablist" aria-label="Navegação principal">
+      <button class="tab" role="tab" aria-selected="true" id="tab-home">Home</button>
+      <button class="tab" role="tab" aria-selected="false" id="tab-presets">Presets</button>
+      <button class="tab" role="tab" aria-selected="false" id="tab-custom">Custom</button>
+      <button class="tab" role="tab" aria-selected="false" id="tab-about">Sobre</button>
+    </div>
+
+    <main>
+      <aside class="sidebar" id="sidebar">
+        <h3 style="margin:0 0 10px 0">Presets Rápidos</h3>
+        <div class="preset" data-search="limpo cristal claro clean bright" tabindex="0">
+          <strong>Clean Bright</strong>
+          <small>Ganho baixo · Graves médios · Reverb sutil</small>
+        </div>
+        <div class="preset" data-search="saturado crunch médio grind" tabindex="0">
+          <strong>Crunch Medio</strong>
+          <small>Drive moderado · Scoop nos médios</small>
+        </div>
+        <div class="preset" data-search="metal pesado tight" tabindex="0">
+          <strong>Metal Tight</strong>
+          <small>Ganho alto · Mids definidos · Gate</small>
+        </div>
+        <div style="margin-top:12px">
+          <button class="btn">Novo Preset</button>
+        </div>
+      </aside>
+
+      <section class="content" id="content">
+        <div id="home-panel" role="tabpanel">
+          <h2>Bem-vindo ao Amp Settings</h2>
+          <p class="lead" style="color:var(--muted)">Use a lupa para encontrar presets ou navegue pelas abas para gerir configurações.</p>
+          <div class="controls" style="margin-top:16px">
+            <div class="card btn">Importar</div>
+            <div class="card btn">Exportar</div>
+            <div class="card btn">Sincronizar</div>
+          </div>
+        </div>
+
+        <div id="presets-panel" role="tabpanel" style="display:none">
+          <h2>Presets</h2>
+          <p style="color:var(--muted)">Lista de presets disponíveis. Use a busca para filtrar.</p>
+          <ul id="presetList" style="margin-top:12px">
+            <li data-search-item>Clean Bright — Ganho: 2 · Bass: 4 · Mid: 6 · Treble: 7</li>
+            <li data-search-item>Crunch Medio — Ganho: 5 · Bass: 5 · Mid: 3 · Treble: 6</li>
+            <li data-search-item>Metal Tight — Ganho: 9 · Bass: 6 · Mid: 8 · Treble: 5</li>
+          </ul>
+        </div>
+
+        <div id="custom-panel" role="tabpanel" style="display:none">
+          <h2>Custom</h2>
+          <p style="color:var(--muted)">Crie e edite presets personalizados.</p>
+          <form id="customForm" style="margin-top:12px;display:grid;gap:10px;max-width:520px">
+            <label for="presetName">Nome do Preset</label>
+            <input type="text" id="presetName" placeholder="Ex: My Heavy" />
+
+            <label for="gain">Ganho</label>
+            <input type="range" id="gain" min="0" max="10" value="5" />
+
+            <label for="bass">Bass</label>
+            <input type="range" id="bass" min="0" max="10" value="5" />
+
+            <label for="mid">Mid</label>
+            <input type="range" id="mid" min="0" max="10" value="5" />
+
+            <label for="treble">Treble</label>
+            <input type="range" id="treble" min="0" max="10" value="5" />
+
+            <div style="display:flex;gap:8px">
+              <button class="btn" id="savePreset">Salvar Preset</button>
+              <button class="btn" id="resetPreset" type="reset">Resetar</button>
+            </div>
+          </form>
+        </div>
+
+        <div id="about-panel" role="tabpanel" style="display:none">
+          <h2>Sobre</h2>
+          <p style="color:var(--muted)">Amp Settings — criado para gerenciar presets de amplificadores com rapidez e estilo.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      © Amp Settings — Feito com ❤️. Integrar backend com API REST ou WebSocket.
+    </footer>
+  </div>
+
+  <script>
+    // Tabs
+    const tabs = document.querySelectorAll('.tab');
+    const panels = {
+      'tab-home': document.getElementById('home-panel'),
+      'tab-presets': document.getElementById('presets-panel'),
+      'tab-custom': document.getElementById('custom-panel'),
+      'tab-about': document.getElementById('about-panel')
+    };
+    tabs.forEach(t=>t.addEventListener('click',()=>{
+      tabs.forEach(x=>x.setAttribute('aria-selected','false'));
+      t.setAttribute('aria-selected','true');
+      Object.values(panels).forEach(p=>p.style.display='none');
+      panels[t.id].style.display='block';
+    }));
+
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    const clearBtn = document.getElementById('clearSearch');
+    const presets = Array.from(document.querySelectorAll('.preset'));
+    const searchItems = Array.from(document.querySelectorAll('[data-search-item]'));
+
+    function runSearch(q){
+      const s = q.trim().toLowerCase();
+      if(!s){
+        presets.forEach(p=>p.style.display='block');
+        searchItems.forEach(i=>i.style.display='list-item');
+        clearBtn.style.display='none';
+        return;
+      }
+      clearBtn.style.display='inline-block';
+      presets.forEach(p=>{
+        const text = (p.getAttribute('data-search')||'') + ' ' + p.textContent;
+        p.style.display = text.toLowerCase().includes(s) ? 'block' : 'none';
+      });
+      searchItems.forEach(i=>{
+        i.style.display = i.textContent.toLowerCase().includes(s) ? 'list-item' : 'none';
+      });
+    }
+
+    searchInput.addEventListener('input',e=>runSearch(e.target.value));
+    clearBtn.addEventListener('click',()=>{searchInput.value='';runSearch('');searchInput.focus();});
+    document.getElementById('searchToggle').addEventListener('click',()=>searchInput.focus());
+
+    // Prevent default form submit
+    document.getElementById('customForm').addEventListener('submit',function(e){ e.preventDefault(); });
+
+    // basic preset save action with duplicate check
+    document.getElementById('savePreset').addEventListener('click',()=>{
+      const name = document.getElementById('presetName').value || 'Novo Preset';
+      const gain = document.getElementById('gain').value;
+      const bass = document.getElementById('bass').value;
+      const mid = document.getElementById('mid').value;
+      const treble = document.getElementById('treble').value;
+      const text = `${name} — Ganho: ${gain} · Bass: ${bass} · Mid: ${mid} · Treble: ${treble}`;
+
+      const exists = [...document.querySelectorAll('#presetList li')].some(li=>li.textContent === text);
+      if(exists){
+        alert('Esse preset já existe.');
+        return;
+      }
+
+      const li = document.createElement('li');
+      li.setAttribute('data-search-item','');
+      li.textContent = text;
+      document.getElementById('presetList').appendChild(li);
+      alert('Preset salvo!');
+    });
+
+    // Header save button placeholder
+    document.getElementById('headerSave').addEventListener('click',()=>{
+      alert('Salvar global ainda não implementado (placeholder).');
+    });
+  </script>
+</body>
+</html>
