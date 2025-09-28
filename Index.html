@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Amp Settings</title>
-  <meta name="description" content="Amp Settings — painel de configurações e presets para amplificadores" />
+  <meta name="description" content="Amp Settings — painel de presets e configurações para amplificadores" />
   <style>
     :root{
       --bg:#0f1724;
@@ -17,8 +17,41 @@
       color-scheme: dark;
     }
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#071024);color:#e6eef6}
-    .container{max-width:1100px;margin:32px auto;padding:28px;border-radius:20px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:0 6px 30px rgba(2,6,23,0.6)}
+    html, body{
+      height: 100%;
+      margin: 0;
+      background-color: #000; /* fundo preto */
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/0f/Rammstein_logo.svg'); /* símbolo Rammstein */
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: 150px 150px;
+      color: #e6eef6;
+      position: relative;
+    }
+    /* Marca d'água César Trivelato */
+    body::after{
+      content: "César Trivelato";
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-30deg);
+      font-size: 60px;
+      color: rgba(255,255,255,0.05);
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+      white-space: nowrap;
+    }
+    .container{
+      max-width:1100px;
+      margin:32px auto;
+      padding:28px;
+      border-radius:20px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      box-shadow:0 6px 30px rgba(2,6,23,0.6);
+      position: relative;
+      z-index: 1;
+    }
     header{display:flex;gap:16px;align-items:center;justify-content:space-between}
     .brand{display:flex;align-items:center;gap:14px}
     .logo{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#2dd4bf);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px}
@@ -147,13 +180,13 @@
 
         <div id="about-panel" role="tabpanel" style="display:none">
           <h2>Sobre</h2>
-          <p style="color:var(--muted)">Amp Settings — criado para gerenciar presets de amplificadores com rapidez e estilo.</p>
+          <p style="color:var(--muted)">Amp Settings — criado para gerenciar presets de amplificadores com rapidez e estilo. Autor: César Trivelato</p>
         </div>
       </section>
     </main>
 
     <footer>
-      © Amp Settings — Feito com ❤️. Integrar backend com API REST ou WebSocket.
+      © Amp Settings — Feito com ❤️ por César Trivelato. Integração futura com API REST ou WebSocket.
     </footer>
   </div>
 
@@ -173,7 +206,7 @@
       panels[t.id].style.display='block';
     }));
 
-    // Search functionality
+    // Search
     const searchInput = document.getElementById('searchInput');
     const clearBtn = document.getElementById('clearSearch');
     const presets = Array.from(document.querySelectorAll('.preset'));
@@ -201,17 +234,17 @@
     clearBtn.addEventListener('click',()=>{searchInput.value='';runSearch('');searchInput.focus();});
     document.getElementById('searchToggle').addEventListener('click',()=>searchInput.focus());
 
-    // Prevent default form submit
+    // Form
     document.getElementById('customForm').addEventListener('submit',function(e){ e.preventDefault(); });
 
-    // basic preset save action with duplicate check
+    // Save Preset
     document.getElementById('savePreset').addEventListener('click',()=>{
       const name = document.getElementById('presetName').value || 'Novo Preset';
       const gain = document.getElementById('gain').value;
       const bass = document.getElementById('bass').value;
       const mid = document.getElementById('mid').value;
       const treble = document.getElementById('treble').value;
-      const text = `${name} — Ganho: ${gain} · Bass: ${bass} · Mid: ${mid} · Treble: ${treble}`;
+      const text = `${name} — Ganho: ${gain} · Bass: ${bass} · Mid: ${mid} · Treble: ${treble} · Autor: César Trivelato`;
 
       const exists = [...document.querySelectorAll('#presetList li')].some(li=>li.textContent === text);
       if(exists){
@@ -226,9 +259,8 @@
       alert('Preset salvo!');
     });
 
-    // Header save button placeholder
     document.getElementById('headerSave').addEventListener('click',()=>{
-      alert('Salvar global ainda não implementado (placeholder).');
+      alert('Salvar global ainda não implementado.');
     });
   </script>
 </body>
